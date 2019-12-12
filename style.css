@@ -1,0 +1,158 @@
+body {   
+    background: #e8eaed;
+    font-family: "Arial", sans-serif;
+    font-weight: 300;
+    display: flex;
+}
+   
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 500;
+    margin: 0;
+}
+
+.title-section {
+    background: red;
+    padding: 2px 10px;
+    color: white;
+}
+
+h1 {
+    font-size: 1.1rem;
+}
+
+.inner-section {
+    padding: 20px;
+}
+
+.wrapper {
+    overflow: hidden;
+    background: white;
+    margin: auto;
+    flex-flow: column wrap;
+    width: 1000px;
+    border-radius: 5px;
+    display: inline-block;
+    
+}
+
+.wrapper .password-section {
+    position: relative;
+    color: gray;
+    border-radius: 5px;
+    border: 2px solid lightgray;
+    margin-top: 20px;
+    justify-content: space-between;
+    padding: 2px 2px 2px 8px;
+    text-align: left;
+}
+
+.wrapper .password-section .alert {
+    position: absolute;
+    border-radius: 2px;
+    padding: 0 5px;
+    width: 21ch;
+    height: 89%;
+    left: 2px;
+    text-align: center;
+    width: 96%;
+    top: -100%;
+    transition: all 0.5s ease;
+    color: #333;
+    opacity: 0;
+    
+}
+
+.wrapper .password-section .alert.success {
+    opacity: 1;
+    background: rgb(29,161,242, 0.9);
+    
+}
+
+.wrapper .password-section .alert.fail {
+    background: red;
+    color: white;
+    opacity: 1;
+}
+
+.wrapper .password-section .copy {
+    height: 100%;
+    background: red;
+    width: 50px;
+    border: 0;
+    border-radius: 2px;
+    color: white;
+    
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.wrapper .password-section .copy:hover {
+    background: orange;
+}
+
+.wrapper .controls {
+    text-align: left;
+    flex-flow: column wrap;
+    display: flex;
+}
+
+.wrapper .controls .control {
+    padding: 3px;
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+    margin: 2px;
+}
+
+.wrapper .controls .generate {
+    width: 100%;
+    border: 0;
+    background: red;
+    color: white;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.wrapper .controls .generate:hover {
+    background: orange;
+}
+
+#length-box {
+    width: 100%;
+}
+
+#length-box input {
+    width: 100%;
+}
+
+input[type="checkbox"] {
+    visibility: hidden;
+}
+
+label.check-label {
+    position: relative;
+}
+
+label.check-label:before {
+    content: "";
+    height: 1rem;
+    width: 1rem;
+    left: -24px;
+    top: 0;
+    border: 0.5px solid lightgray;
+    position: absolute;
+    background: transparent;
+    transition: all 0.3s cubic-bezier(0, 0.82, 1, 1.81);
+}
+
+input[type="checkbox"]:checked + label.check-label:before {
+    content: "";
+    font-family: "FontAwesome";
+    font-size: 0.8rem;
+    color: #212121;
+    text-align: center;
+    background: #00e676;
+    transition: all 0.3s cubic-bezier(0, 0.82, 1, 1.81);
+}

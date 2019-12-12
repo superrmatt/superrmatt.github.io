@@ -1,0 +1,60 @@
+<html lang="en" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Password Generaor</title>
+        <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Kanit:300,500,700'>
+        <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+    
+    <div class="wrapper">
+        <div class="title-section">
+            <h1 class="title">Generate a Password</h1>
+        </div>
+
+        <div class="inner-section">
+
+            <div class="password-section">
+                <div class="pass-field" id="pass-field">
+                    Your Secure Password
+                </div>
+                <button id="copy" class="copy">Copy</button>
+                <div class="alert" id="alert"><span class="message" id="message"></div>
+            </div>
+            <br>
+
+            <div class="controls">
+                
+                <div class="control length" id="length-box">
+                    <label for="length">Password Length (min: 8, max: 128)</label>
+                    <input type="number" id="length" min="8" max="128" list="ranges">
+                </div>
+
+                <div class="control">
+                    <input type="checkbox" id="lowercase">
+                    <label class="check-label" for="lowercase"><span class="checkbox">Use Lowercase Characters</span></label>
+                </div>
+                <div class="control">
+                    <input type="checkbox" id="uppercase">
+                    <label class="check-label" for="uppercase"><span class="checkbox">Use Uppercase Characters</span></label>
+                </div>
+                <div class="control">
+                    <input type="checkbox" id="numbers">
+                    <label class="check-label" for="numbers"><span class="checkbox">Use Numbers</span></label>
+                </div>
+                <div class="control">
+                    <input type="checkbox" id="punctuation">
+                    <label class="check-label" for="punctuation"><span class="checkbox">Use special characters</span></label>
+                </div>
+        
+                <button class="generate" id="generate">Generate</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src='https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js'></script>
+    <script  src="script.js"></script>
+    
+    </body>
+</html>

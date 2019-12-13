@@ -19,36 +19,47 @@ function generatePassword() {
     password = "";
     passwordCharSet = "";
 
-    if (lowercaseInput.checked) {
-        passwordCharSet += lowercase;
-    }
-    if (uppercaseInput.checked) {
-        passwordCharSet += uppercase;
-    }
-    if (specialInput.checked) {
-        passwordCharSet += specialChars;
-    }
-    if (numsInput.checked) {
-        passwordCharSet += nums;
-    }
-
-    plength = Number(lengthInput.value);
-
-    for (let i = 0; i < plength; i++) {
-        password += passwordCharSet.charAt(Math.floor(Math.random() * passwordCharSet.length));
-    }
-
-    if (password == "") {
+    if((lowercaseInput.checked === false) && (uppercaseInput.checked === false) && (specialInput.checked === false) && (numsInput.checked === false)){
         let alertbox = document.getElementById('alert');
         alertbox.innerHTML = "Please select an option before generating"
         alertbox.classList.add('fail');
         setTimeout(function(){ 
             alertbox.classList.remove('fail');
         }, 3000);
-    } else {
-        passwordFeild.innerHTML = password;
+        return;
+
+    }else if(Number(lengthInput.value) > 128 || Number(lengthInput.value) < 8 ){
+        let alertbox = document.getElementById('alert');
+        alertbox.innerHTML = "Please select a number between 8 and 128."
+        alertbox.classList.add('fail');
+        setTimeout(function(){ 
+            alertbox.classList.remove('fail');
+        }, 3000);
+        return;
     }
 
+    if(lowercaseInput.checked) {
+        passwordCharSet += lowercase;
+    }
+    if(uppercaseInput.checked) {
+        passwordCharSet += uppercase;
+    }
+    if(specialInput.checked) {
+        passwordCharSet += specialChars;
+    }
+    if(numsInput.checked) {
+        passwordCharSet += nums;
+    }
+
+    plength = Number(lengthInput.value);
+    console.log(plength);
+    
+    for(let i = 0; i < plength; i++) {
+        password += passwordCharSet.charAt(Math.floor(Math.random() * passwordCharSet.length));
+    }
+
+    passwordFeild.innerHTML = password;
+    
     copyButton.setAttribute("data-clipboard-text", password)
 }
 

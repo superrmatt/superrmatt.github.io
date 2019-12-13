@@ -2,7 +2,7 @@ var clipboard = new Clipboard('.copy');
 var lowercase = "abcdefghijklmnopqrstuvwxyz",
   uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
   nums = "0123456789",
-  specialChars = "!@#$%^&*()_+~`|}{[]:;?><,./-=",
+  specialChars = "!@#$%^&*()_+~`|}{[]:;?,./-=",
   lowercaseInput = document.getElementById("lowercase"),
   uppercaseInput = document.getElementById("uppercase"),
   specialInput = document.getElementById("punctuation"),
@@ -18,26 +18,20 @@ var lowercase = "abcdefghijklmnopqrstuvwxyz",
 function generatePassword() {
     password = "";
     passwordCharSet = "";
+    error = "";
 
+    //ensure optinos are selected
     if((lowercaseInput.checked === false) && (uppercaseInput.checked === false) && (specialInput.checked === false) && (numsInput.checked === false)){
-        let alertbox = document.getElementById('alert');
-        alertbox.innerHTML = "Please select an option before generating"
-        alertbox.classList.add('fail');
-        setTimeout(function(){ 
-            alertbox.classList.remove('fail');
-        }, 3000);
+        error = "0";
+        alertMessage(error);
         return;
-
     }else if(Number(lengthInput.value) > 128 || Number(lengthInput.value) < 8 ){
-        let alertbox = document.getElementById('alert');
-        alertbox.innerHTML = "Please select a number between 8 and 128."
-        alertbox.classList.add('fail');
-        setTimeout(function(){ 
-            alertbox.classList.remove('fail');
-        }, 3000);
+        error = "1";
+        alertMessage(error);
         return;
     }
 
+    //determine which options are selected and build overall charset based on selected options.
     if(lowercaseInput.checked) {
         passwordCharSet += lowercase;
     }
@@ -51,9 +45,10 @@ function generatePassword() {
         passwordCharSet += nums;
     }
 
+    //determine length of password requested
     plength = Number(lengthInput.value);
-    console.log(plength);
     
+    //build password
     for(let i = 0; i < plength; i++) {
         password += passwordCharSet.charAt(Math.floor(Math.random() * passwordCharSet.length));
     }
@@ -63,9 +58,11 @@ function generatePassword() {
     copyButton.setAttribute("data-clipboard-text", password)
 }
 
-
+//event listener
 generateButton.addEventListener("click", generatePassword);
  
+
+//clipboard success
 clipboard.on('success', function(e) {
 
     let alertbox = document.getElementById('alert');
@@ -78,7 +75,7 @@ clipboard.on('success', function(e) {
     
     e.clearSelection();
 });
- 
+//clipboard fail
 clipboard.on('error', function(e) {
     console.error('Action:', e.action);
     console.error('Trigger:', e.trigger);
@@ -91,3 +88,21 @@ clipboard.on('error', function(e) {
       alertbox.classList.remove('fail');
     }, 3000);
 });
+
+//generates an alert message if password cannot be created and why.
+function alertMessage(errorReason){
+    var message = "";
+
+    if (errorReason == "0"){
+        message = "Please choose an option.";
+    }else if (errorReason == "1"){
+        message ="Password must be between 8 and 128 characters long.";
+    }
+
+    let alertbox = document.getElementById('alert');
+    alertbox.innerHTML = message;
+    alertbox.classList.add('fail');
+    setTimeout(function(){ 
+        alertbox.classList.remove('fail');
+    }, 3000);
+}

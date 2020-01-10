@@ -1,286 +1,299 @@
-$(document).ready(function() {
-
-    /*************************************************************************************/
-    //Global Variables
+$(document).ready(function(){
 
     /*
-    * total quiz length in seconds; default is 100, test value is lower, so as not to wait 100 seconds :)
+    * Weather object, stores all relevant weather data points.
+    * Information for todays weather only.
+    * Each property will be assigned a non-empty value after calls to weather API are returned with information.
+    * Spacing between properties just for neatness and human categorization.
     */
-    var seconds = 100;
+    var weather = {
+        lat: "",
+        lon: "",
+
+        city: "",
+        country: "",
+        id: "",
+        mainWeather: "",
+        description: "",
+        icon: "",
+
+        currentTemp: "",
+        minTemp: "",
+        maxTemp: "",
+        feelsLike: "",
+        pressure: "",
+        humidity: "",
+
+        windSpeed: "",
+        windDir: "",
+
+        uvIndex: ""
+    };
 
     /*
-    * stores current question as string
+    * 5 day weather. Aarray of objects, one object for each day.
+    * Each day possess four properties.
+    * Each property will be assigned a non-empty value after calls to weather API are returned with information.
     */
-    var question = "";
+    var fiveDay = [
+        {
+            icon: "",
+            temperature: "",
+            humidity: "",
+            date: ""
+        }, 
+        {
+            icon: "",
+            temperature: "",
+            humidity: "",
+            date: ""
+        }, 
+        {
+            icon: "",
+            temperature: "",
+            humidity: "",
+            date: ""
+        }, 
+        {
+            icon: "",
+            temperature: "",
+            humidity: "",
+            date: ""
+        }, 
+        {
+            icon: "",
+            temperature: "",
+            humidity: "",
+            date: ""
+        }    
+    ];
 
     /*
-    * stores all current answer choices as string[]
+    * Listener that handles when search button is clicked.
+    * Main or driver function. Handles execution of everything.
+    * @param: e event
     */
-    var answers = ["", "", "", ""];
+    $(".searchBtn").click(function(e){
 
-    /*
-    * stores current correct answer
-    */
-    var correctAnswer = "";
+        //establish current city
+        let city = $("#searchInput").val();
 
-    /*
-    * global variable which stores question number, starts at question 0, as in, index 0 on questions.
-    */
-    var questionNumber = 0;
+        //build URLs 1 & 3, 2 is later, read on to learn why.
+        //url1 == todays weather api link
+        //url3 == 5 day forecast api link
+        let url1 = buildURLOne(city);
+        let url3 = buildURLThree(city);
 
-    /*
-    * 
-    */
-    var intervalFunction = null;
-
-
-    /*************************************************************************************/
-    //Listeners
-
-    /*
-    * When clear high score button is clicked
-    */
-    $(document).on("click", ".clear-btn", function(e){
-        localStorage.clear();
-        buildHighScore();
+        //ajax calls to api, run populateWeather() upon completion via success
+        buildWeather(url1, url3);
+ 
     });
 
     /*
-    * when submit button on quiz end page clicked
+    * Takes the raw parts of the URL and builds the final link for queryiing todays weather.
+    * Builds link to be used for first ajax call.
+    * Link is built upon click of the search button. It is then passed as first argument into buildWeather(string, string).
+    * @param city: string the searched city to build API URL for.
+    * @return: string URL for API call #1
     */
-    $(document).on("click", ".initials-btn", function(e){
-        var initials = $("#initials-input").val();
-        localStorage.setItem('initials', initials);
-        localStorage.setItem('score', seconds);
-
-        buildHighScore();
-    });
-
-    /* 
-    * When start quiz button is clicked, initialize quiz
-    */
-    $(".start-button").on("click", function(){ 
-        //imports the questions to head of this file
-        importQuestions();
-        //gets first question value, stores in global variables
-        getQuestion();
- 
-        var intro = $("#introduction");
- 
-        $(".start-button").remove();
-         
-        var answerGroup = $(".answer-group");
- 
-        var answerBtnType = "button",
-            answerBtnClasses = "btn btn-primary answer-choices";
- 
-        //builds new button template, to be added 3 times
-        var newButton = $("<button>");
-        newButton.attr("type", answerBtnType);
-        newButton.attr("class", answerBtnClasses);
- 
-        //empty, then change attribute values to make more sense with question/answer format
-        intro.empty();
-        intro.attr("id", "question");
-        intro.html(question);
- 
-        //adds the new buttons
-        for(i = 0; i < 4; i++){
-            newButton.html(answers[i]);
-            newButton.attr("id", i);
-            newButton.clone().appendTo(answerGroup);
-        }
-         
-        //build timer last so as not to penalize quiz-taker for javascript loading time if non-negligable
-        buildTimer();
-    });
-
-    /* 
-    * when user clicks on an answer choice
-    * validate & respond accordingly.
-    */
-    $(document).on("click", ".answer-choices", function(e){
-        var getValue = e.target.textContent;
-
-        //correct answer
-        if(getValue == correctAnswer){
-            isValid(true);
-        } 
-        //wrong answer
-        else if (getValue != correctAnswer){
-            isValid(false);
-        }
-    });
-
-
-    /*************************************************************************************/
-    //Functions
-
-    /*
-    * imports questions.js
-    * runs at start
-    */
-    function importQuestions(){
-        var imported = document.createElement('questions');
-        imported.src = 'questions.js';
-        document.head.appendChild(imported);
-        return imported;
-    }
-
-    /*
-    * accessor, gets current question, (title, answers, and correct answer) and stores in global variables
-    */
-    function getQuestion(){
-        //get question, set to global
-        question = questions[questionNumber].title;
-
-        //get answers, set to global
-        for(i = 0; i < questions[questionNumber].choices.length; i++){
-            answers[i] = questions[questionNumber].choices[i];
-        }
+    function buildURLOne(city){
+        //link + key + imperial units because USA is ass backwards and doesn't use metric.
+        let apiLink = "https://api.openweathermap.org/data/2.5/weather";
+        let apiQuery = "?appid=dba8e4e798d907acb9b0e7ea7244cf27&units=imperial";
         
-        //get correct answer, set to global
-        correctAnswer = questions[questionNumber].answer;
+        //replace any spaces with %20
+        let resultCity = city.replace(" ", "%20");
+        resultCity = "&q=" + resultCity; 
+        //add city to link
+        let fullURL = apiLink + apiQuery + resultCity;
+
+        return fullURL;
     }
 
     /*
-    * responds based on validity of answer, mainly to keep ".answer-button" listener a little cleaner looking
-    * @arg: validity type boolean = true if answer is correct, false if not
+    * Takes the raw parts of the URL and builds the final link for queryiing UV index.
+    * Builds link to be used for second ajax call in buildWeather(string, string).
+    * Since we need the coordinates of the location to search, we have to wait for first ajax call to finish
+    * Therefore, unlike the other two link building functions, this one is run in buildWeather(string, string), aafter first ajax call is completed.
+    * @param lat: string or integer latitude of the searched city to build API URL for.
+    * @param lon: string or integer longitude of the searched city to build API URL for.
+    * @return: string URL for API call #2
     */
-    function isValid(validity){
-        //correct answer
-        if(validity == true){
-            if(questionNumber == questions.length - 1){
-                quizEnd();
-                return;
-            }
-            changeTime(+5);
+    function buildURLTwo(lat, lon){
+        //link + key
+        let apiLink = "https://api.openweathermap.org/data/2.5/uvi/forecast";
+        let apiQuery = "?appid=dba8e4e798d907acb9b0e7ea7244cf27";
 
-            //append a small message, remove after 1 second
-            $(".center").append("<div class=\"message\"><hr><p><i>Correct!");
-            setTimeout(function() {
-                $(".message").remove();
-            }, 1000);
+        //snag those coordinates
+        let resultCoord = "&lat=" +lat + "&lon=" + lon;
+        //add 'em all together
+        let fullURL = apiLink + apiQuery + resultCoord;
 
-            //increment questionNumber, get the next question and set html for next question
-            questionNumber += 1
-            getQuestion();
-            setQA();
-        }
+        return fullURL;
+        //unlike the other two calls, this one will never have spaces, so need to replace them with %20, in case anyone was wondering.
+    }
 
-        //incorrect answer
-        else if(validity == false){
-            changeTime(-15);
+    /*
+    * Takes the raw parts of the URL and builds the final link for queryiing five day weather forecast.
+    * Builds a link to be used for third ajax call in buildWeather(string, string).
+    * Link is built upon click of search button. It is then passed as second argument into buildWeather(string, string).
+    * @param city: string the searched city to build API URL for.
+    * @return string URL for API call #1
+    */
+    function buildURLThree(city){
+        let apiLink = "https://api.openweathermap.org/data/2.5/forecast";
+        let apiQuery = "?appid=dba8e4e798d907acb9b0e7ea7244cf27&units=imperial";
+        
+        let resultCity = city.replace(" ", "%20");
+        resultCity = "&q=" + resultCity; 
+        let fullURL = apiLink + apiQuery + resultCity;
+        console.log("5-day link = " + fullURL);
+
+        return fullURL;
+    }
+
+    /*
+    * runs api calls
+    * There are three calls.
+    * 1: gets today's weather, also gets coordinates to run second API call.
+    * 2: gets UV index of location based on coordinates of previously searched location.
+    * 3: gets 5 day forecast. Forecast is compiled every 3 hours. Meaning the result is an array of 40 objects to be deciphered in popoulateWeather().
+    * since ajax calls are asynchronous, we must wait for each to finish in order to compile properly and without buggies, especially since call #2 relies on data from call #1.
+    * Therefore, each ajax call waits for a promise from previous call of completion. This way no one is stepping on anyones toes.
+    * @param url1: string URL to run first ajax call on.
+    * @param url3: string URL to run third ajax call on.
+    */
+    function buildWeather(url1, url3) {
+        
+        //gets all weather data
+        //first: todays weather
+        $.ajax({
+            url: url1,
+            success: function(response) {
+
+                //populate weather object
+                weather.lat = response.coord.lat; 
+                weather.lon = response.coord.lon;
+
+                weather.city = response.name;
+                weather.country = response.sys.country;
             
-            //append a small message, remove after 1 second
-            $(".center").append("<div class=\"message\"><hr><p><i>Wrong!");
-            setTimeout(function() {
-                $(".message").remove();
-            }, 1000); 
-        }
-    }
+                weather.id = response.weather[0].id;
+                weather.mainWeather = response.weather[0].main;
+                weather.description = response.weather[0].description;
+                weather.icon = response.weather[0].icon;
+            
+                //round 'em, because who, besides meteoroligists or fanatics, measure temperature to the hundredth place.
+                weather.currentTemp = Math.round(response.main.temp);
+                weather.minTemp = Math.round(response.main.temp_min);
+                weather.maxTemp = Math.round(response.main.temp_max);
+                weather.feelsLike = Math.round(response.main.feels_like);
+                weather.pressure = response.main.pressure;
+                weather.humidity = response.main.humidity;
+            
+                weather.windSpeed = response.wind.speed;
 
-    /*
-    * runs when quiz ends. 
-    */
-    function quizEnd(){
-        //end timer
-        clearInterval(intervalFunction);
-        //build score page
-        buildEndPage();
-    }
+                //now build link for UV index, since lat/long is needed to query successfully. Lat/long obtained in api call #1
+                let url2 = buildURLTwo(weather.lat, weather.lon);
+                
+                //then UV index
+                $.ajax({
+                    url: url2,
+                    success: function(response) {
+                        weather.uvIndex = response[0].value;
 
-    /*
-    * function called to build high score after 'submit' clicked
-    */
-    function buildHighScore(){
-        //makes adding buttons easier
-        var buttonAttr = "type=\"button\" class=\"btn btn-primary";
-        //makes adding tab easier
-        var tab = "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
-
-        //for when clear is clicked, not elegant, but works to alleviate dupe html.
-        $(".center").remove();
-        $(".row").append("<div class=\"col-md-7 center\">");
-
-        //out with the old, in with the new
-        $(".game-end").remove();
-        $(".center").append("<div class=highscore>");
-        $(".highscore").append("<div id=highscore-text><strong>Highscores");
-        
-        //how many items? update html appropriately.
-        for (i = 0; i < localStorage.length; i++)   {
-            let initTmp = localStorage.getItem("initials");
-            let scoreTmp = localStorage.getItem("score");
-            $(".highscore").append("<div class=scores>" + initTmp + tab + scoreTmp);
-        }
-        
-        $(".highscore").append("<button " + buttonAttr + " back-btn\" onclick=\"window.location=\'index.html\';\">Back");
-        $(".highscore").append("<button " + buttonAttr + " clear-btn\">Clear Highscores");
-    }
-
-    /*
-    * function which builds the ending page, called at completion of quiz
-    */
-    function buildEndPage(){
-        $(".answer-choices").remove();
-        $("#question").remove();
-        $(".answer-group").remove();
-        $(".center").append("<div class=\"game-end\">");
-        $(".game-end").append("<div id=\"end-message\"><strong>All Done!");
-        $(".game-end").append("<div id=\"score\"> Your score is: " + seconds);
-        $(".game-end").append("<div class=\"initials\">Enter initials: <input id=\"initials-input\"><button type=\"button\" class=\"btn btn-primary initials-btn\">Submit")
-    }
-
-    /*
-    * changes timer value.  
-    * @arg time == int delta in seconds
-    * delta being change
-    */
-    function changeTime(delta){
-        seconds = seconds + delta;
-        if(seconds <= 0){
-            //game over, time has run out.
-            quizEnd();
-            return;
-        }
-        $(".timer").html("Time: " + seconds);
-    }
-
-    /*
-    * builds the initial state of the timer
-    */
-    function buildTimer(){
-        //timer will always count every second
-        intervalFunction = window.setInterval(start, 1000);
-
-        /*
-        * starts & runs timer. 
-        */
-        function start() {
-            if(seconds > 0){ //if time is not yet 0
-                changeTime(-1);
-                //decrement
-            } else { //else
-                //time has hit 0, this should never run due to handling in changeTime(), it is merely here just in case.
-                quizEnd();
-                return;
+                        console.log("2nd ajax call done - UV");
+                        //lastly 5-day weather
+                        $.ajax({
+                            url: url3,
+                            success: function(response) {
+                               
+                                //populate five day array.
+                                //j 'iterates' the JSON response. 8 since we get weather update every 3 hours, (24/3) = 8.
+                                //this ensures one reading per day, all at same time.
+                                let j = 0;
+                                for(let i = 0; i < fiveDay.length; i++){
+                                    console.log("i = " + i);
+                                    fiveDay[i].icon = response.list[j].weather[0].icon;
+                                    fiveDay[i].temperature = Math.round(response.list[j].main.temp);
+                                    fiveDay[i].humidity = response.list[j].main.humidity;
+                                    fiveDay[i].date = response.list[j].dt_txt;
+                                    j = j + 8;
+                                }
+                                
+                                //now that all data has been retrieved, update webpage via populateWeather()
+                                populateWeather();
+                            }
+                        });
+                    } 
+                });
             }
+        });
+    } 
+  
+    /*
+    * prints current forecast onto page.
+    * Uses JQuery to edit html values. Consult index.html for initial html structure.
+    */
+    function populateWeather(){
+
+        let today = moment();
+        let todayDate = today.format("MM/DD/YYYY");
+        
+        //today
+        $("#top").html(weather.city + ", " + weather.country + " (" + todayDate + ") <img src=\"./icon_images/" + weather.icon +".png\" alt=\"icon " + weather.icon + "\"></img>");
+        $("#tempNow").html("Temperature: " + weather.currentTemp + "&#8457");
+        $("#tempMax").html("Low: " + weather.maxTemp + "&#8457");
+        $("#tempMin").html("High: " + weather.minTemp + "&#8457");
+        $("#tempFeels").html("Feels like: " + weather.minTemp + "&#8457");
+        $("#humidity").html("Humidity " + weather.humidity + "%");
+        $("#wind").html("Wind: " + weather.windSpeed + "mph");
+
+        //UVindex
+        //determine severity of UV index.
+        //Disclosure: these calculations are not meant to be guidlines. Any aount of UV radiation is harmful and should be avoided when possible.
+        let sevString = "";
+        if(weather.uvIndex < 3){
+            //0 - 2.99 = low
+            sevString = "<div class=\"alert alert-success\" role=\"alert\">";
+        }else if(weather.uvIndex >= 3 && weather.uvIndex <= 6){
+            //3 - 6 = moderate
+            sevString = "<div class=\"alert alert-warning\" role=\"alert\">";
+        }else if(weather.uvIndex > 6 && weather.uvIndex <= 10){
+            //6 - 10 = high
+            sevString = "<div class=\"alert alert-danger\" role=\"alert\">";
         }
+        //add html
+        $("#uvIndex").html("UV Index: " + sevString + weather.uvIndex + "</div>");
+        
+        //five day
+        $(".fiveDayForecast").text("5-Day Forecast:")
+        //for each day
+        for(let i = 0; i < fiveDay.length; i ++){
+            let day = i + 1;
+
+            let parsedDate = moment(fiveDay[i].date).format("MM/DD/YYYY");
+
+            $("#day" + day + "Date").html(parsedDate);
+            $("#day" + day + "Icon").html("<img src=\"./icon_images/" + fiveDay[i].icon +".png\" alt=\"icon " + fiveDay[i].icon + "\"></img>");
+            $("#day" + day + "Temp").html("Temp: " + fiveDay[i].temperature);
+            $("#day" + day + "Humidity").html("Humidity: " + fiveDay[i].humidity)
+        }
+        //lastly, style it up!
+        style();
     }
 
     /*
-    * mutator: sets question & answer in html
-    * generally, to be called upon correct answer
-    * for this functionality to work properly (as intended), run getQuestions() first, to update current question
+    * Sets up the css on the page for final result.
+    * Just some simple JQuery for finishing touches.
+    * Check style.css and Bootstrap CSS for initial css setup.
     */
-    function setQA(){
-        //edit question html
-        $("#question").html(question);
+    function style(){
+        
+        $(".background").css("background-color", "blue");
+        //this might look funky, BUT, since Bootstrap has built-in border class, and having borders in these divs before weather is shown looks silly, I thought it best to make a placeholder class with no CSS effects. Now just add Bootstrap border class upon compeltion and viola! Borders.
+        $(".addBorder").addClass("border");
+        $(".daily").css("margin", "6px");
 
-        //edit button html
-        for(i = 0; i < 4; i ++){
-            $("#" + i).html(answers[i])
-        }
     }
 });

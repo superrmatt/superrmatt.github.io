@@ -1,5 +1,4 @@
-# CodeQuiz
-# @author: supperrmatt
-# a little quiz for class.
-# Designed to test one's knowledge of javascript
-# some questions and answers are a bit whacky, I advise a lack of seriousness when reviewing.
+# weatherDashboard
+# Allows user to view weather for one city at a time.
+# User can view a 5 day forecast.
+# Gives user an idea of UV Index severity.

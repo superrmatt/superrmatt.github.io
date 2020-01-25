@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en-us">
     <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <meta charset="UTF-8">
         <title>
@@ -11,58 +14,70 @@
 
 
     <body>
-        <div class="mainHeader">
-            
-            <h1 id ="name">
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="index.html">Matt Dambra</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+                    
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="portfolio.html">Portfolio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact Me</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    
+        <div class="container">
+            <h1>
                 Matt Dambra
             </h1>
 
-            <section id ="topRight">
-                <h3>
-                    <a href="index.html" target="_blank">About</a>
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <a href="portfolio.html" target="_blank">Portfolio</a>
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <a href="contact.html" target="_blank">Contact</a>
-                </h3>
-            </section>
+            <div class="row">
+                <div class="col-md-4">
+                        <img class= "img-fluid" src=assets/images/me.jpg alt="Matt_Dambra">
+                </div>
             
+                <div class="col-md-8">
+                    <p>My name is Matt. I am computer scientist by trade, and an enthusiast by hobby.
+                    </p>
+                    <p>I began my journey on Long Island, where I resided for just eleven months. 
+                        From there I moved to a small town in Dutchess County, NY, called Stormville. 
+                        I also spent a few years living in Waterloo, Belgium. Currently, I live with my brother in Danbury, CT.
+                    </p>
+                    <p>I attended State University of New York College at Plattsburgh to study and receive a B.S. in Computer Security.
+                        Since graduating in May 2017 I have pursued a somewhat varied career path, 
+                        I started out as a penetration tester and soon moved onto systems and linux engineering.
+                        The highlight achievement of my college and post college career thus far has been the development of multiple
+                        Artificial Neural Networks for various tasks, ask me about them if you are interested!
+                    </p>
+                    <p>I like to think I am something of a hobbyist. I play many instruments, have lots of pet fish, and tons of house plants.
+                        I love to read and have been working on a fourteen book epic-fantasy series for the past four years now called "The Wheel of Time".
+                        Fellow fantasy nuts: I highly recomend this series! I work on a lot of software development projects in my spare time. 
+                        Such as the aforementioned Artificial Neural Networks.
+                        Lastly, as an ex-boy scout and current Eagle Scout, I am an avid outdoorsman. I love to hike, bike, kayak, canoe, fish, camp, 
+                        and so much more! 
+                    </p>
+                </div>
+            </div>
         </div>
-    
-        <div class="body">
-            <h2> 
-                About Me
-            </h2>
-            <hr>
-            <section id="meImage">
-                <img id="bioImage" src=assets/images/me.jpg alt="Matt_Dambra">
-            </section>
-            <p>My name is Matt. I am computer scientist by trade, and an enthusiast by hobby.
-            </p>
-            <p>I began my journey on Long Island, where I resided for just eleven months. 
-                From there I moved to a small town in Dutchess County, NY, called Stormville. 
-                I characterize it as a forest on a mountain with a few peppered homes.
-                I also spent a few years living in Waterloo, Belgium. Currently, I live with my brother in Danbury, CT.
-            </p>
-            <p>I attended University at Buffalo where I purused a degree in computer science.
-                After my sophomore year I decided I wanted to specialize my education in cybersecurity, 
-                I then trasnfered to State University of New York College at Plattsburgh to study and receive a B.S. in Computer Security.
-                Since graduating in May 2017 I have pursued a somewhat varied career path, 
-                I started out as a penetration tester and soon moved onto systems and linux engineering.
-                The highlight achievement of my college and post college career thus far has been the development of multiple
-                Artificial Neural Networks for various tasks, ask me about them if you are interested!
-            </p>
-            <p>I like to think I am something of a hobbyist. I play many instruments, have lots of pet fish, and tons of house plants.
-                I love to read and have been working on a fourteen book epic-fantasy series for the past four years now called "The Wheel of Time".
-                Fellow fantasy nuts: I highly recomend this series! I work on a lot of software development projects in my spare time. 
-                Such as the aforementioned Artificial Neural Networks.
-                Lastly, as an ex-boy scout and current Eagle Scout, I am an avid outdoorsman. I love to hike, bike, kayak, canoe, fish, camp, 
-                and so much more! 
-            </p>
-        </div>
-        
-        <footer>
-            Copyright &#9400;
+
+        <footer class="page-footer font-small blue pt-4">
+            <div class="footer-copyright text-center py-3">© 2019 Copyright
+                Matt Dambra
+            </div>
         </footer>
+        
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     </body>
 </html>

@@ -7,6 +7,8 @@ body {
     background-image: url("../images/background.png");
     background-repeat: no-repeat;
     background-size: 100%;
+    min-height: 120vh;
+    padding-bottom: 120px;
 }
 
 h2 {
@@ -16,7 +18,7 @@ h2 {
 
 
 footer {
-    display: inline-block; 
+    display: inline-block;
     background-color: #666666;
     text-align: center;
     color: #dddddd;

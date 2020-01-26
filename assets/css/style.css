@@ -9,76 +9,11 @@ body {
     background-size: 100%;
 }
 
-h1, h2, h3 {
-    border-color: #cccccc;
-    font-family: 'Georgia', Times, 'Times New Roman', serif;
-}
-a {
-    text-decoration: none;
-    color: #777777;
-}
-
 h2 {
     color: #4aaaa5;
     background-color: white;
 }
 
-.body {
-    padding: 10px 10px 10px 10px;
-    background-color: #ffffff;
-    border-color: #dddddd;
-    color: #777777;
-    width: 960px;
-    margin: 0 auto;
-    position: relative;
-    top: 75px;
-    margin-bottom: 100px;
-    font-size: 18px;
-
-}
-
-.mainHeader {
-    position: absolute;
-    background-color: #ffffff;
-    border-color: #cccccc;
-    width: 100%;
-    top: 0;
-    left: 0;
-    height: 58px;
-
-}
-
-#topRight{
-    color: #777777;
-    font-size: 10px;
-    position: absolute;
-    right: 50%;
-    margin-right: -485px;
-    top: 20%;
-}
-
-#name {
-    width:  225px;
-    color: white;
-    background-color: #4aaaa5;
-    position: absolute;
-    left: 50%;
-    margin-left: -490px;
-    height: 100%;
-    bottom: -22px;
-}
-
-#meImage {
-    float: left;
-    padding: 10px 10px 10px 0px;
-}
-
-hr {
-    background-color: #ffffff;
-    border: solid;
-    height: 0px;
-    opacity: 25%;
-}
 
 footer {
     background-color: #666666;
@@ -106,14 +41,6 @@ input[type=submit] {
     padding: 12px 20px;
     border: none;
     cursor: pointer;
-}
-
-#contactName, #email, #message{
-      width: 890px;
-}
-
-#message {
-    height: 150px;
 }
 
 .portfolio {

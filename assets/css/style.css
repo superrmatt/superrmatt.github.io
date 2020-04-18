@@ -1,0 +1,58 @@
+html {
+    margin: 0 auto;
+    font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+body {
+    background-image: url("../images/background.png");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    min-height: 120vh;
+    padding-bottom: 120px;
+}
+
+h2 {
+    color: #4aaaa5;
+    background-color: white;
+}
+
+
+footer {
+    display: inline-block;
+    background-color: #666666;
+    text-align: center;
+    color: #dddddd;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    font-size: 10px;
+}
+
+input[type=text], select, textarea { 
+    padding: 12px; 
+    border: 1px solid #ccc; 
+    margin-top: 10px; 
+    margin-bottom: 12px;
+    resize: auto;
+}
+  
+input[type=submit] {
+    background-color: #4aaaa5;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.portfolio {
+    width: 300px;
+}
+
+.almanac{
+    margin-top: -100px;
+}
+  
+.top {
+    padding: 2px;
+}
